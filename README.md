@@ -138,3 +138,42 @@ jar cmf <файл манифеста> <имя архива> <опции> <дир
 * . - путь к файлам (символ точка означает текущую директорию)
 
 
+## Подключаем зависимости
+
+log4j.jar - библиотека для логирования ([для чего нужно логирование?](http://www.skipy.ru/useful/logging.html))
+
+теперь нужно в classpath также добавить нашу библиотеку
+
+> $ javac -d ./target/classes -cp .:log4j-1.2.17.jar src/main/java/ru/mail/track/MiptHello.java
+
+
+для запуска приложения в classpath нужно указать путь к файлам .class, путь к библиотеке логирования и путь к папке ресурсов, где лежит конфигурация логгера
+
+> $ java -cp ./src/main/resources/:./target/classes/:log4j-1.2.17.jar ru.mail.track.MiptHello
+
+## Система сборки проекта
+
+pom.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>ru.mail.track</groupId>
+    <artifactId>sample</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <dependencies>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+    </dependencies>
+</project>
+```
+
+
+> $ mvn compile exec:java  -Dexec.mainClass=ru.mail.track.MiptHello
