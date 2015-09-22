@@ -11,7 +11,7 @@ public class MiptHello {
     public static void main(String[] args) {
         System.out.println("Hello MIPT");
 
-//        Logger logger = Logger.getLogger(MiptHello.class);
-//        logger.info("Use logging library");
+  //      Logger logger = Logger.getLogger(MiptHello.class);
+  //      logger.info("Use logging library");
     }
 }

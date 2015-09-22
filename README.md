@@ -151,7 +151,8 @@ log4j.jar - библиотека для логирования ([для чего
 
 > $ java -cp ./src/main/resources/:./target/classes/:log4j-1.2.17.jar ru.mail.track.MiptHello
 
-## Система сборки проекта
+## Maven Система сборки проекта
+
 
 pom.xml
 
@@ -165,6 +166,7 @@ pom.xml
     <groupId>ru.mail.track</groupId>
     <artifactId>sample</artifactId>
     <version>1.0-SNAPSHOT</version>
+    
     <dependencies>
         <dependency>
             <groupId>log4j</groupId>
@@ -175,5 +177,15 @@ pom.xml
 </project>
 ```
 
-
-> $ mvn compile exec:java  -Dexec.mainClass=ru.mail.track.MiptHello
+Maven по умолчанию требует определенной [структуры директорий](https://maven.apache.org/guides/introduction/introduction-to-the-standard-directory-layout.html)
+ 
+ pom.xml - конфигурационный файл
+ src/main/java - корень для хранению исходного кода
+ src/main/resources - хранение ресурсов (конфигураций и тд )
+ target - maven сложит сюда скомпилированныей файлы
+ 
+ Скомпилировать и запустить:
+  
+> $ mvn compile exec:java -Dexec.mainClass=ru.mail.track.MiptHello
+    
+    
