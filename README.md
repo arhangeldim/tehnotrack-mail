@@ -7,7 +7,7 @@
 3. Команды [читать здесь](http://windows.microsoft.com/ru-ru/windows/command-prompt-faq#1TC=windows-7) и [здесь](http://yroki-kompa.ru/vse_komandy_komandnoj_stroki_windows.html)
 
 
-**nix**
+**Unix**
 Ну, вы сами знаете :) Если нет, то [читать здесь](http://pingvinus.ru/note/command-line-fundamentals)
 
 
