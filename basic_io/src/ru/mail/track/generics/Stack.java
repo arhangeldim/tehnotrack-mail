@@ -7,21 +7,20 @@ import java.util.Collection;
  */
 public interface Stack<E> {
 
-    public void push(E element) throws StackException;
+    void push(E element) throws StackException;
 
-    public E pop() throws StackException;
+    E pop() throws StackException;
 
-    public E peek();
+    E peek();
 
-    public int getSize();
+    int getSize();
 
-    public boolean isEmpty();
+    boolean isEmpty();
 
-    public boolean isFull();
+    boolean isFull();
 
+    // A little bit wrong =( Could you fix it?
+    void pushAll(Collection<E> src) throws StackException;
 
-    // A little bit wrong (
-    public void pushAll(Collection<E> src) throws StackException;
-
-    public void popAll(Collection<E> dst) throws StackException;
+    void popAll(Collection<E> dst) throws StackException;
 }

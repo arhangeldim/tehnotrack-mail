@@ -9,8 +9,6 @@ public class ArrayStack<E> implements Stack<E> {
     private Object[] elements;
     private int capacity;
     private int size;
-    private E[] t;
-
 
     public ArrayStack(int capacity) {
         this.capacity = capacity;

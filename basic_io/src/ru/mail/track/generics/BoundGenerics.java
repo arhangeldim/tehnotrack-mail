@@ -45,7 +45,7 @@ public class BoundGenerics {
     }
 
     static <T> void test(List<? super T> list) {
-        T item = list.get(0);
+//        T item = list.get(0);
     }
 
     public static void main(String[] args) {
@@ -55,13 +55,13 @@ public class BoundGenerics {
         List<Dog> dogs = new ArrayList<>();
         dogs.add(new Dog()); dogs.add(new Dog());
 
-        callPets(cats); // Incompatible types (compile time)
-        callPets(dogs);
+//        callPets(cats); // Incompatible types (compile time)
+//        callPets(dogs);
 
 
         List<Animal> animals = new ArrayList<>();
         // Incompatible types
-        fillPets(animals);
+//        fillPets(animals);
 
     }
 

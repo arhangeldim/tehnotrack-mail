@@ -10,8 +10,8 @@ public class Arrays {
 
     public static void main(String[] args) {
 
-        List<String> strs = new ArrayList<>();
-        List<Object> objs = strs;
+//        List<String> strs = new ArrayList<>();
+//        List<Object> objs = strs;
 
 
 

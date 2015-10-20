@@ -50,6 +50,7 @@ public class Polimorf {
         list.add(new Child());
         list.add(new Parent());
 
+        // Using for loop (old!)
 //        for (Parent p : list) {
 //            p.test();
 //        }
