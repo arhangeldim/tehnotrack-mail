@@ -18,12 +18,20 @@ public class ThreadedClient {
     private OutputStream out;
     private Socket socket;
 
+    public ThreadedClient() {
+        create();
+    }
+
     public void create() {
 
         try {
             socket = new Socket(HOST, PORT);
             in = socket.getInputStream();
             out = socket.getOutputStream();
+
+            Thread socketHandler = new SocketHandler();
+            socketHandler.start();
+
         } catch (IOException e) {
             e.printStackTrace();
             // exit, failed to open socket
