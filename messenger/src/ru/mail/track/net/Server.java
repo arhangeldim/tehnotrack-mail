@@ -21,6 +21,7 @@ public class Server {
             sSocket = new ServerSocket(PORT);
 
             System.out.println("Started, waiting for connection");
+
             Socket socket = sSocket.accept();
 
             System.out.println("Accepted. " + socket.getInetAddress());

@@ -16,4 +16,10 @@ public class IOUtil {
             }
         }
     }
+
+    static void closeQuietly(Closeable... list) {
+        for (Closeable res : list) {
+            closeQuietly(res);
+        }
+    }
 }
