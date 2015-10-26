@@ -1,6 +1,5 @@
-package ru.mail.track.net;
+package ru.mail.track.net.simple;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
