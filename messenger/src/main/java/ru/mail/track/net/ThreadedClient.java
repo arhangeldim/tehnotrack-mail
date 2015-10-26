@@ -1,85 +1,66 @@
 package ru.mail.track.net;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Scanner;
+
+import ru.mail.track.message.Message;
 
 
 /**
  * Клиентская часть
  */
-public class ThreadedClient {
+public class ThreadedClient implements MessageListener {
 
     public static final int PORT = 19000;
     public static final String HOST = "localhost";
 
-    private InputStream in;
-    private OutputStream out;
-    private Socket socket;
+    ConnectionHandler handler;
 
     public ThreadedClient() {
-        create();
-    }
-
-    public void create() {
-
         try {
-            socket = new Socket(HOST, PORT);
-            in = socket.getInputStream();
-            out = socket.getOutputStream();
+            Socket socket = new Socket(HOST, PORT);
+            handler = new SocketConnectionHandler(socket);
 
-            Thread socketHandler = new SocketHandler();
+            // Этот класс будет получать уведомления от socket handler
+            handler.addListener(this);
+
+            Thread socketHandler = new Thread(handler);
             socketHandler.start();
-
         } catch (IOException e) {
             e.printStackTrace();
+            System.exit(0);
             // exit, failed to open socket
-        } finally {
-            IOUtil.closeQuietly(in, out, socket);
         }
     }
 
-    /**
-     *
-     * Отправить сообщение в сокет
-     */
-    void send(String msg) throws Exception {
-        out.write(msg.getBytes());
+    public void processInput(String line) throws IOException {
+        Message msg = new Message(line);
+        handler.send(msg);
     }
 
     /**
-     * Получено сообщение из сокета, как обрабатывать
+     * Получено сообщение из handler, как обрабатывать
      *
      */
-    void onMessage(String msg) {
-        System.out.println(msg);
+    @Override
+    public void onMessage(Message msg) {
+        System.out.printf("%s", msg);
     }
 
-    class SocketHandler extends Thread {
-        @Override
-        public void run() {
-            try {
-                byte[] buf = new byte[1024 * 64];
-                while (!Thread.currentThread().isInterrupted()) {
-                    int read = in.read(buf);
-                    String msg = new String(buf, 0, read);
-                    onMessage(msg);
-                }
-            } catch (IOException e) {
-                Thread.currentThread().interrupt();
+
+    public static void main(String[] args) throws Exception{
+        ThreadedClient client = new ThreadedClient();
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("$");
+        while (true) {
+            String input = scanner.next();
+            if ("q".equals(input)) {
+                return;
             }
+            client.processInput(input);
         }
     }
-
-    private void closeResources() {
-        try {
-            if (in != null) in.close();
-            if (out != null) out.close();
-            if (socket != null) socket.close();
-        } catch (IOException e) {
-        }
-    }
-
 
 }
