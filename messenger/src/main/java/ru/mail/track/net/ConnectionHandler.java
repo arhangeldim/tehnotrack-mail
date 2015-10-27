@@ -5,7 +5,7 @@ import java.io.IOException;
 import ru.mail.track.message.Message;
 
 /**
- * Обработчик сокетно
+ * Обработчик сокета
  */
 public interface ConnectionHandler extends Runnable {
 

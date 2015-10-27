@@ -1,4 +1,4 @@
-package ru.mail.track.thread;
+package ru.mail.track.thread.queueu;
 
 /**
  *

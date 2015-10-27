@@ -1,6 +1,8 @@
-package ru.mail.track.thread;
+package ru.mail.track.thread.queueu;
 
 import java.util.LinkedList;
+
+import ru.mail.track.thread.queueu.BlockingQueue;
 
 /**
  *

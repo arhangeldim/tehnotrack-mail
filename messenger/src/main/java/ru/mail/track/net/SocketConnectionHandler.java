@@ -14,12 +14,14 @@ import org.slf4j.LoggerFactory;
 import ru.mail.track.message.Message;
 
 /**
- *
+ * Класс работающий с сокетом, умеет отправлять данные в сокет
+ * Также слушает сокет и рассылает событие о сообщении всем подписчикам (асинхронность)
  */
 public class SocketConnectionHandler implements ConnectionHandler {
 
     static Logger log = LoggerFactory.getLogger(SocketConnectionHandler.class);
 
+    // подписчики
     private List<MessageListener> listeners = new ArrayList<>();
     private Socket socket;
     private InputStream in;
@@ -37,17 +39,20 @@ public class SocketConnectionHandler implements ConnectionHandler {
             log.debug(msg.toString());
         }
 
-        // TODO: здесь долен быть встроен алгоритм кодирования/декодирования сообщений
+        // TODO: здесь должен быть встроен алгоритм кодирования/декодирования сообщений
         // то есть требуется описать протокол
         out.write(Protocol.encode(msg));
         out.flush();
     }
 
+    // Добавить еще подписчика
     @Override
     public void addListener(MessageListener listener) {
         listeners.add(listener);
     }
 
+
+    // Разослать всем
     public void notifyListeners(Message msg) {
         listeners.forEach(it -> it.onMessage(msg));
     }
@@ -63,6 +68,7 @@ public class SocketConnectionHandler implements ConnectionHandler {
 
                     log.info("message received: {}", msg);
 
+                    // Уведомим всех подписчиков этого события
                     notifyListeners(msg);
                 }
             } catch (Exception e) {
