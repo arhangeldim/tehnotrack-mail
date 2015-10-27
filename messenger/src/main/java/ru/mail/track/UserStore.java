@@ -1,6 +1,8 @@
 package ru.mail.track;
 
 
+import ru.mail.track.message.User;
+
 public class UserStore {
 
 
