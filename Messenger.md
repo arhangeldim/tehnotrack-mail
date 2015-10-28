@@ -110,6 +110,12 @@ http://www.ccfit.nsu.ru/~deviv/courses/oop/java_ser_rus.html
 Данные на сервере хранятся в хранилище (базе данных), за взаимодействие с бд отвечают интерфейсы UserStore (пользователи) и 
 MessageStore (сообщения и чаты). С помощью этих интерфейсов можно получить сущности.
 
+Примерная диаграмма классов
+![alt tag](https://raw.githubusercontent.com/arhangeldim/tehnotrack-mail/master/messenger/Entities.png)
+
+Примерная схема потока данных (данные идут как по стрелкам клиент-сервер, так и в обратную сторону)
+![alt tag](https://raw.githubusercontent.com/arhangeldim/tehnotrack-mail/master/messenger/Messenger.png)
+
 
 ## Описание
 
