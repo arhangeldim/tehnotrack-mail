@@ -36,14 +36,14 @@ public class CounterTest {
     }
 
     public static void main(String[] args) throws Exception {
-        testCounter();
-        //testSafeUnsafe();
+        //testCounter();
+        testSafeUnsafe();
     }
 
     public static void testCounter() throws Exception {
         final int threadNum = 2;
-        Counter counter = new SimpleCounter();
-        //Counter counter = new AtomicCounter();
+        //Counter counter = new SimpleCounter();
+        Counter counter = new AtomicCounter();
         //LockCounter counter = new LockCounter();
         Thread[] threads = new Thread[threadNum];
         for (int i = 0; i < threadNum; i++) {
@@ -61,7 +61,7 @@ public class CounterTest {
 
     public static void testSafeUnsafe() throws Exception {
 
-        final int threadNum = 3;
+        final int threadNum = 2;
         //Counter counter = new SimpleCounter();
         //Counter counter = new AtomicCounter();
         LockCounter counter = new LockCounter();

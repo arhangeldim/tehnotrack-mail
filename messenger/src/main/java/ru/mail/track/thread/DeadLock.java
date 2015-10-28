@@ -25,16 +25,16 @@ public class DeadLock {
         static void transact(final Account from, final Account to, int amount) {
             Account lock1, lock2;
 
-            lock1 = from;
-            lock2 = to;
+//            lock1 = from;
+//            lock2 = to;
 
-//            if (from.id < to.id) {
-//                lock1 = from;
-//                lock2 = to;
-//            } else {
-//                lock1 = to;
-//                lock2 = from;
-//            }
+            if (from.id < to.id) {
+                lock1 = from;
+                lock2 = to;
+            } else {
+                lock1 = to;
+                lock2 = from;
+            }
 
             synchronized (lock1) {
                 logger.info("Lock1({}) was acquired by thread {}. Waiting for lock2({})", lock1.id, Thread.currentThread().getName(), lock2.id);

@@ -1,5 +1,8 @@
 package ru.mail.track.thread.counting;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 import ru.mail.track.thread.counting.Counter;
 
 /**
