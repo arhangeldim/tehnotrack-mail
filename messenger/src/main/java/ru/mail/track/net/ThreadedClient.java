@@ -80,7 +80,7 @@ public class ThreadedClient implements MessageListener {
      */
     @Override
     public void onMessage(Session session, Message msg) {
-        System.out.printf("%s", msg);
+        System.out.printf("%s", ((SendMessage) msg).getMessage());
     }
 
 
