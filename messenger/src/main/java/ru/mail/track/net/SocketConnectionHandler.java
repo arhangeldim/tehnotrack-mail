@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ru.mail.track.message.Message;
+import ru.mail.track.session.Session;
 
 /**
  * Класс работающий с сокетом, умеет отправлять данные в сокет
@@ -26,9 +27,14 @@ public class SocketConnectionHandler implements ConnectionHandler {
     private Socket socket;
     private InputStream in;
     private OutputStream out;
+    private Protocol protocol;
+    private Session session;
 
-    public SocketConnectionHandler(Socket socket) throws IOException {
+    public SocketConnectionHandler(Protocol protocol, Session session, Socket socket) throws IOException {
+        this.protocol = protocol;
         this.socket = socket;
+        this.session = session;
+        session.setConnectionHandler(this);
         in = socket.getInputStream();
         out = socket.getOutputStream();
     }
@@ -41,7 +47,7 @@ public class SocketConnectionHandler implements ConnectionHandler {
 
         // TODO: здесь должен быть встроен алгоритм кодирования/декодирования сообщений
         // то есть требуется описать протокол
-        out.write(Protocol.encode(msg));
+        out.write(protocol.encode(msg));
         out.flush();
     }
 
@@ -53,8 +59,8 @@ public class SocketConnectionHandler implements ConnectionHandler {
 
 
     // Разослать всем
-    public void notifyListeners(Message msg) {
-        listeners.forEach(it -> it.onMessage(msg));
+    public void notifyListeners(Session session, Message msg) {
+        listeners.forEach(it -> it.onMessage(session, msg));
     }
 
     @Override
@@ -64,12 +70,10 @@ public class SocketConnectionHandler implements ConnectionHandler {
             try {
                 int read = in.read(buf);
                 if (read > 0) {
-                    Message msg = Protocol.decode(Arrays.copyOf(buf, read));
-
+                    Message msg = protocol.decode(Arrays.copyOf(buf, read));
                     log.info("message received: {}", msg);
-
                     // Уведомим всех подписчиков этого события
-                    notifyListeners(msg);
+                    notifyListeners(session, msg);
                 }
             } catch (Exception e) {
                 log.error("Failed to handle connection: {}", e);
