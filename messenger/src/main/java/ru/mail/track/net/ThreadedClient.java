@@ -1,18 +1,17 @@
 package ru.mail.track.net;
 
-import java.io.IOException;
-import java.net.Socket;
-import java.util.Arrays;
-import java.util.Scanner;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import ru.mail.track.comands.CommandType;
 import ru.mail.track.message.LoginMessage;
 import ru.mail.track.message.Message;
 import ru.mail.track.message.SendMessage;
 import ru.mail.track.session.Session;
+
+import java.io.IOException;
+import java.net.Socket;
+import java.util.Arrays;
+import java.util.Scanner;
 
 
 /**
@@ -20,11 +19,9 @@ import ru.mail.track.session.Session;
  */
 public class ThreadedClient implements MessageListener {
 
-    static Logger log = LoggerFactory.getLogger(ThreadedClient.class);
-
     public static final int PORT = 19000;
     public static final String HOST = "localhost";
-
+    static Logger log = LoggerFactory.getLogger(ThreadedClient.class);
     ConnectionHandler handler;
     Protocol protocol;
 
@@ -44,6 +41,21 @@ public class ThreadedClient implements MessageListener {
             e.printStackTrace();
             System.exit(0);
             // exit, failed to open socket
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        Protocol protocol = new StringProtocol();
+        ThreadedClient client = new ThreadedClient(protocol);
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("$");
+        while (true) {
+            String input = scanner.nextLine();
+            if ("q".equals(input)) {
+                return;
+            }
+            client.processInput(input);
         }
     }
 
@@ -81,22 +93,6 @@ public class ThreadedClient implements MessageListener {
     @Override
     public void onMessage(Session session, Message msg) {
         System.out.printf("%s", ((SendMessage) msg).getMessage());
-    }
-
-
-    public static void main(String[] args) throws Exception{
-        Protocol protocol = new StringProtocol();
-        ThreadedClient client = new ThreadedClient(protocol);
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("$");
-        while (true) {
-            String input = scanner.nextLine();
-            if ("q".equals(input)) {
-                return;
-            }
-            client.processInput(input);
-        }
     }
 
 }
