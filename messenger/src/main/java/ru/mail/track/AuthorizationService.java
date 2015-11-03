@@ -2,6 +2,7 @@ package ru.mail.track;
 
 
 import ru.mail.track.message.User;
+import ru.mail.track.message.UserStore;
 
 public class AuthorizationService {
 

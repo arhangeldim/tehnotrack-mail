@@ -1,5 +1,6 @@
 package ru.mail.track.message;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,8 +12,8 @@ public class Chat {
     /**
      * Храним список идентификаторов
      */
-    private List<Long> messageIds;
-    private List<Long> participantIds;
+    private List<Long> messageIds = new ArrayList<>();
+    private List<Long> participantIds = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -36,6 +37,14 @@ public class Chat {
 
     public void setParticipantIds(List<Long> participantIds) {
         this.participantIds = participantIds;
+    }
+
+    public void addParticipant(Long id) {
+        participantIds.add(id);
+    }
+
+    public void addMessage(Long id) {
+        messageIds.add(id);
     }
 
 }

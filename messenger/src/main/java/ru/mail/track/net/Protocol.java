@@ -5,16 +5,10 @@ import ru.mail.track.message.Message;
 /**
  *
  */
-public class Protocol {
+public interface Protocol {
 
-    public static Message decode(byte[] bytes) {
-        String data = new String(bytes);
-        return new Message(data);
-    }
+    Message decode(byte[] bytes);
 
-    public static byte[] encode(Message msg) {
-        return msg.getMessage().getBytes();
-
-    }
+    byte[] encode(Message msg);
 
 }

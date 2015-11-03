@@ -1,17 +1,20 @@
 package ru.mail.track.message;
 
+import ru.mail.track.comands.CommandType;
+
 /**
  *
  */
-public class Message {
+public abstract class Message {
 
     private Long id;
-    private String message;
     private Long sender;
 
-    public Message(String message) {
-        this.message = message;
+    private CommandType type;
+
+    public Message() {
     }
+
 
     public Long getId() {
         return id;
@@ -19,18 +22,6 @@ public class Message {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Message(Long sender, String message) {
-        this.message = message;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     public Long getSender() {
@@ -41,12 +32,19 @@ public class Message {
         this.sender = sender;
     }
 
+    public CommandType getType() {
+        return type;
+    }
+
+    public void setType(CommandType type) {
+        this.type = type;
+    }
 
     @Override
     public String toString() {
         return "Message{" +
-                "message='" + message + '\'' +
                 ", sender=" + sender +
+                ", type=" + type +
                 '}';
     }
 }
