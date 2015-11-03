@@ -4,7 +4,12 @@ package ru.mail.track.jdbc;
  * Created by r.kildiev on 02.11.2015.
  */
 
-import java.sql.*;
+import org.postgresql.ds.PGPoolingDataSource;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class JDBCExample {
 
@@ -12,8 +17,18 @@ public class JDBCExample {
 
         Class.forName("org.postgresql.Driver");
 
-        Connection c = DriverManager.getConnection("jdbc:postgresql://178.62.140.149:5432/mydb",
-                "senthil", "ubuntu");
+        PGPoolingDataSource source = new PGPoolingDataSource();
+        source.setDataSourceName("My DB");
+        source.setServerName("178.62.140.149");
+        source.setDatabaseName("mydb");
+        source.setUser("senthil");
+        source.setPassword("ubuntu");
+        source.setMaxConnections(10);
+
+        Connection c = source.getConnection();
+
+//        Connection c = DriverManager.getConnection("jdbc:postgresql://178.62.140.149:5432/mydb",
+//                "senthil", "ubuntu");
 
         Statement stmt;
         String sql;
@@ -122,6 +137,7 @@ public class JDBCExample {
 //        int parameterIndex = 234;
 //        prepStmnt.setString(parameterIndex, "asd");
 //        rs = prepStmnt.executeQuery();
+
 
     }
 
