@@ -19,7 +19,7 @@ public class JDBCExample {
         String sql;
 
         stmt = c.createStatement();
-        sql = "CREATE TABLE COMPANY " +
+        sql = "CREATE TABLE IF NOT EXISTS company" +
                 "(ID INT PRIMARY KEY     NOT NULL," +
                 " NAME           TEXT    NOT NULL, " +
                 " AGE            INT     NOT NULL, " +

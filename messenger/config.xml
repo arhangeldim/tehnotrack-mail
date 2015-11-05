@@ -1,0 +1,15 @@
+<root>
+
+    <bean id="engine" class="ru.mail.track.reflection.Engine">
+        <property name="power" val="200"/>
+    </bean>
+
+    <bean id="gear" class="ru.mail.track.reflection.Manual">
+        <property name="count" val="6"/>
+    </bean>
+
+    <bean id="car" class="ru.mail.track.reflection.Car">
+        <property name="gear" ref="gear"/>
+    </bean>
+
+</root>
