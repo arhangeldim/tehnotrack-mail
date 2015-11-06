@@ -6,12 +6,15 @@ import ru.mail.track.comands.CommandType;
 import ru.mail.track.message.LoginMessage;
 import ru.mail.track.message.Message;
 import ru.mail.track.message.SendMessage;
+import ru.mail.track.reflection.di.Auto;
 import ru.mail.track.session.Session;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.Scanner;
+
+import javax.annotation.PostConstruct;
 
 
 /**
@@ -23,10 +26,15 @@ public class ThreadedClient implements MessageListener {
     public static final String HOST = "localhost";
     static Logger log = LoggerFactory.getLogger(ThreadedClient.class);
     ConnectionHandler handler;
-    Protocol protocol;
 
-    public ThreadedClient(Protocol protocol) {
-        this.protocol = protocol;
+    @Auto(isRequired = true)
+    private Protocol protocol = new StringProtocol();
+
+    public ThreadedClient() {
+    }
+
+    @PostConstruct
+    public void init() {
         try {
             Socket socket = new Socket(HOST, PORT);
             Session session = new Session();
@@ -46,7 +54,7 @@ public class ThreadedClient implements MessageListener {
 
     public static void main(String[] args) throws Exception {
         Protocol protocol = new StringProtocol();
-        ThreadedClient client = new ThreadedClient(protocol);
+        ThreadedClient client = new ThreadedClient();
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("$");

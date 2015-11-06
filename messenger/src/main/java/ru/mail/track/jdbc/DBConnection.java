@@ -6,7 +6,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.postgresql.ds.PGPoolingDataSource;
 
@@ -54,6 +56,21 @@ public class DBConnection {
 
         QueryExecutor exec = new QueryExecutor();
         List<User> users = exec.execQuery(c, "SELECT * FROM users;", (r) -> {
+            System.out.println("handle:");
+            List<User> data = new ArrayList<>();
+            while (r.next()) {
+                User u = new User(r.getString(2), null);
+                data.add(u);
+            }
+            return data;
+        });
+
+        System.out.println(users.toString());
+
+        Map<Integer, Object> prepared = new HashMap<>();
+        prepared.put(1, "John");
+
+        users = exec.execQuery(c, "SELECT * FROM users WHERE name = ?;", prepared, (r) -> {
             System.out.println("handle:");
             List<User> data = new ArrayList<>();
             while (r.next()) {

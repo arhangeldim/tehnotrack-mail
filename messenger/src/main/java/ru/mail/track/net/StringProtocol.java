@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ru.mail.track.comands.CommandType;
+import ru.mail.track.context.AutoComponent;
 import ru.mail.track.message.LoginMessage;
 import ru.mail.track.message.Message;
 import ru.mail.track.message.SendMessage;
@@ -11,6 +12,7 @@ import ru.mail.track.message.SendMessage;
 /**
  *
  */
+@AutoComponent
 public class StringProtocol implements Protocol {
 
     static Logger log = LoggerFactory.getLogger(StringProtocol.class);
