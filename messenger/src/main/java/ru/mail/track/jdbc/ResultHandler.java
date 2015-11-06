@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- *
+ * Обобщенный интерфейс обработки результата
  */
 
 public interface ResultHandler<T> {

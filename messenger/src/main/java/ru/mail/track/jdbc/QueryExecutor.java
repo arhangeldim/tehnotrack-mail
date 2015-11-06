@@ -8,10 +8,13 @@ import java.sql.Statement;
 import java.util.Map;
 
 /**
+ * Обертка для запроса в базу
  *
+ * Также можно инкапсулировать Connection внутрь
  */
 public class QueryExecutor {
 
+    // Простой запрос
     public <T> T execQuery(Connection connection, String query, ResultHandler<T> handler) throws SQLException {
         Statement stmt = connection.createStatement();
         stmt.execute(query);
@@ -23,6 +26,7 @@ public class QueryExecutor {
         return value;
     }
 
+    // Подготовленный запрос
     public <T> T execQuery(Connection connection, String query, Map<Integer, Object> args, ResultHandler<T> handler) throws SQLException {
         PreparedStatement stmt = connection.prepareStatement(query);
         for (Map.Entry<Integer, Object> entry : args.entrySet()) {
@@ -34,4 +38,6 @@ public class QueryExecutor {
         stmt.close();
         return value;
     }
+
+    // Также нужно реализовать Update запросы
 }

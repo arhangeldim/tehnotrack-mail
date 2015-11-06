@@ -43,6 +43,9 @@ public class DBConnection {
         rs.close();
         stmt.close();
 
+        /**
+         * Получение сгенерированного базой ключа
+         */
         stmt = c.createStatement();
         int result = stmt.executeUpdate("INSERT INTO \"users\" (name) values ('Anna');", Statement.RETURN_GENERATED_KEYS);
         System.out.println("result: " + result);
@@ -54,6 +57,9 @@ public class DBConnection {
         }
 
 
+        /**
+         * Использование executor для запроса в базу
+         */
         QueryExecutor exec = new QueryExecutor();
         List<User> users = exec.execQuery(c, "SELECT * FROM users;", (r) -> {
             System.out.println("handle:");
@@ -67,6 +73,10 @@ public class DBConnection {
 
         System.out.println(users.toString());
 
+
+        /**
+         * Использование prepared executor для запроса в базу
+         */
         Map<Integer, Object> prepared = new HashMap<>();
         prepared.put(1, "John");
 
