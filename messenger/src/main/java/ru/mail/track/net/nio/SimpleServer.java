@@ -2,90 +2,136 @@ package ru.mail.track.net.nio;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  *
  */
 public class SimpleServer implements Runnable {
 
+    static Logger log = LoggerFactory.getLogger(SimpleServer.class);
+
+    public static final int PORT = 19000;
+
     private Selector selector;
-    private ServerSocketChannel socketChannel;
-    // The buffer into which we'll read data when it's available
-    private ByteBuffer readBuffer = ByteBuffer.allocate(8192);
+    private ByteBuffer readBuffer = ByteBuffer.allocate(16); // буфер, с которым будем работать
+    private Map<SocketChannel, ByteBuffer> dataToWrite = new ConcurrentHashMap<>(); // Данные для записив канал
 
-    public void init() throws Exception {
+    public static void main(String[] args) throws Exception {
+        Thread t = new Thread(new SimpleServer());
+        t.start();
+    }
+
+    public SimpleServer() throws Exception {
         selector = Selector.open();
-        socketChannel = ServerSocketChannel.open();
 
-        socketChannel.socket().bind(new InetSocketAddress(9999));
+        // Это серверный сокет
+        ServerSocketChannel socketChannel = ServerSocketChannel.open();
+
+        // Привязали его к порту
+        socketChannel.socket().bind(new InetSocketAddress(PORT));
+
+        // Должен быть неблокирующий для работы через selector
         socketChannel.configureBlocking(false);
 
+        // Нас интересует событие коннекта клиента (как и для Socket - ACCEPT)
         socketChannel.register(selector, SelectionKey.OP_ACCEPT);
-
     }
 
     @Override
     public void run() {
         while (true) {
             try {
-                int num = selector.select();
-                if (num == 0) {
-                    continue;
-                }
+                log.info("Waiting on select()");
 
+                // Блокируемся до получения евента на зарегистрированных каналах
+                int num = selector.select();
+                log.info("Raised events on {} channels", num);
+
+                // Смторим, кто сгенерил евенты
                 Set<SelectionKey> keys = selector.selectedKeys();
                 Iterator<SelectionKey> it = keys.iterator();
+
+                // Проходим по всем источникам
                 while (it.hasNext()) {
-
                     SelectionKey key = it.next();
+
+                    // Если кто-то готов присоединиться
                     if (key.isAcceptable()) {
-// Accept the connection and make it non-blocking
+                        log.info("[acceptable]");
+
+                        // Создаем канал для клиента и регистрируем его в сеоекторе
+                        // Для нас интересно событие, когда клиент будет писать в канал
                         SocketChannel socketChannel = ((ServerSocketChannel) key.channel()).accept();
-                        Socket socket = socketChannel.socket();
                         socketChannel.configureBlocking(false);
-
-                        // Register the new SocketChannel with our Selector, indicating
-                        // we'd like to be notified when there's data waiting to be read
                         socketChannel.register(selector, SelectionKey.OP_READ);
+
                     } else if (key.isReadable()) {
+                        log.info("[readable]");
+
+                        // По ключу получаем соответствующий канал
                         SocketChannel socketChannel = (SocketChannel) key.channel();
+                        readBuffer.clear(); // чистим перед использование
 
-                        // Clear out our read buffer so it's ready for new data
-                        readBuffer.clear();
-
-                        // Attempt to read off the channel
                         int numRead;
                         try {
+
+                            // читаем данные в буфер
                             numRead = socketChannel.read(readBuffer);
                         } catch (IOException e) {
-                            // The remote forcibly closed the connection, cancel
-                            // the selection key and close the channel.
+                            // Ошибка чтения - закроем это соединений и отменим ключ в селекторе
+                            log.error("Failed to read data from channel", e);
                             key.cancel();
                             socketChannel.close();
-                            return;
+                            break;
                         }
 
                         if (numRead == -1) {
-                            // Remote entity shut the socket down cleanly. Do the
-                            // same from our end and cancel the channel.
+                            // С нами оборвали соединение со стороны клиента
+                            log.error("Failed to read data from channel (-1)");
                             key.channel().close();
                             key.cancel();
-                            return;
+                            break;
                         }
 
-                        // Hand the data off to our worker thread
-                        //worker.processData(this, socketChannel, this.readBuffer.array(), numRead);
+                        log.info("read: {}", new String(readBuffer.array()));
 
+                        // Чтобы читать данные ИЗ буфера, делаем flip()
+                        readBuffer.flip();
+
+                        // В качестве эхо-сервера, кладем то, что получили от клиента обратно в канал на запись
+                        dataToWrite.put(socketChannel, readBuffer);
+
+                        // Меняем состояние канала - теперь он готов для записи и в следующий select() он будет isWritable();
+                        key.interestOps(SelectionKey.OP_WRITE);
+
+                    } else if (key.isWritable()) {
+                        log.info("[writable]");
+
+                        SocketChannel socketChannel = (SocketChannel) key.channel();
+                        ByteBuffer data = dataToWrite.get(socketChannel);
+                        log.info("write: {}", new String(data.array()));
+
+                        socketChannel.write(data);
+
+                        // Меняем состояние канала - теперь он готов для чтения и в следующий select() он будет isReadable();
+                        key.interestOps(SelectionKey.OP_READ);
                     }
                 }
+
+                // Нужно почитстить обработанные евенты
                 keys.clear();
             } catch (IOException e) {
                 e.printStackTrace();
