@@ -7,8 +7,6 @@ import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Scanner;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +26,8 @@ public class NioClient {
     private SocketChannel channel;
     private ByteBuffer buffer = ByteBuffer.allocate(16);
 
+    String str = null;
+
     // TODO: Нужно создать блокирующую очередь, в которую складывать данные для обмена между потоками
 
     public void init() throws Exception {
@@ -43,8 +43,15 @@ public class NioClient {
                     System.exit(0);
                 }
 
-                // TODO: здесь ужно сложить прочитанные данные в очередь
+                // TODO: здесь нужно сложить прочитанные данные в очередь
 
+                str = line;
+
+                // Будим селектор
+                SelectionKey key = channel.keyFor(selector);
+                log.info("wake up: {}", key.hashCode());
+                key.interestOps(SelectionKey.OP_WRITE);
+                selector.wakeup();
             }
         });
         t.start();
@@ -68,7 +75,7 @@ public class NioClient {
                 SelectionKey sKey = keyIterator.next();
 
                 if (sKey.isConnectable()) {
-                    log.info("[connectable]");
+                    log.info("[connectable] {}", sKey.hashCode());
 
                     channel.finishConnect();
 
@@ -84,8 +91,6 @@ public class NioClient {
                     }
                     log.info("From server: {}", new String(buffer.array()));
 
-                    // теперь в канал можно писать
-                    sKey.interestOps(SelectionKey.OP_WRITE);
                 } else if (sKey.isWritable()) {
                     log.info("[writable]");
 
@@ -94,6 +99,10 @@ public class NioClient {
                     //byte[] userInput = ...;
                     //channel.write(ByteBuffer.wrap(userInput));
 
+
+                    if (str != null) {
+                        channel.write(ByteBuffer.wrap(str.getBytes()));
+                    }
                     // Ждем записи в канал
                     sKey.interestOps(SelectionKey.OP_READ);
                 }
