@@ -35,6 +35,9 @@ public class LoginCommand implements Command {
         } else {
             LoginMessage loginMsg = (LoginMessage) msg;
             User user = userStore.getUser(loginMsg.getLogin(), loginMsg.getPass());
+//            if (user == null) {
+//                return;
+//            }
             session.setSessionUser(user);
             sessionManager.registerUser(user.getId(), session.getId());
             log.info("Success login: {}", user);

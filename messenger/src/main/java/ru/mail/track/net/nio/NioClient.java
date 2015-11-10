@@ -7,6 +7,8 @@ import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Scanner;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +28,10 @@ public class NioClient {
     private SocketChannel channel;
     private ByteBuffer buffer = ByteBuffer.allocate(16);
 
-    String str = null;
+    BlockingQueue<String> queue = new ArrayBlockingQueue<>(2);
 
     // TODO: Нужно создать блокирующую очередь, в которую складывать данные для обмена между потоками
+
 
     public void init() throws Exception {
 
@@ -45,7 +48,12 @@ public class NioClient {
 
                 // TODO: здесь нужно сложить прочитанные данные в очередь
 
-                str = line;
+                try {
+                    queue.put(line);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+
+                }
 
                 // Будим селектор
                 SelectionKey key = channel.keyFor(selector);
@@ -100,8 +108,10 @@ public class NioClient {
                     //channel.write(ByteBuffer.wrap(userInput));
 
 
-                    if (str != null) {
-                        channel.write(ByteBuffer.wrap(str.getBytes()));
+                    String line = queue.poll();
+                    if (line != null) {
+                        channel.write(ByteBuffer.wrap(line.getBytes()));
+
                     }
                     // Ждем записи в канал
                     sKey.interestOps(SelectionKey.OP_READ);

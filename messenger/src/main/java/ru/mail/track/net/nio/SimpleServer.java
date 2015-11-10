@@ -11,9 +11,13 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.sun.javafx.image.ByteToBytePixelConverter;
 
 
 /**
@@ -28,6 +32,8 @@ public class SimpleServer implements Runnable {
     private Selector selector;
     private ByteBuffer readBuffer = ByteBuffer.allocate(16); // буфер, с которым будем работать
     private Map<SocketChannel, ByteBuffer> dataToWrite = new ConcurrentHashMap<>(); // Данные для записив канал
+
+    private ExecutorService service = Executors.newFixedThreadPool(5);
 
     public static void main(String[] args) throws Exception {
         Thread t = new Thread(new SimpleServer());
@@ -52,6 +58,9 @@ public class SimpleServer implements Runnable {
 
     @Override
     public void run() {
+
+
+
         while (true) {
             try {
                 log.info("Waiting on select()");
@@ -111,11 +120,17 @@ public class SimpleServer implements Runnable {
                         // Чтобы читать данные ИЗ буфера, делаем flip()
                         readBuffer.flip();
 
+                        service.submit(() -> {
+                            dataToWrite.put(socketChannel, ByteBuffer.wrap("Hello".getBytes()));
+                            key.interestOps(SelectionKey.OP_WRITE);
+                            selector.wakeup();
+                        });
+
                         // В качестве эхо-сервера, кладем то, что получили от клиента обратно в канал на запись
-                        dataToWrite.put(socketChannel, readBuffer);
+                        //dataToWrite.put(socketChannel, readBuffer);
 
                         // Меняем состояние канала - теперь он готов для записи и в следующий select() он будет isWritable();
-                        key.interestOps(SelectionKey.OP_WRITE);
+
 
                     } else if (key.isWritable()) {
                         log.info("[writable]");

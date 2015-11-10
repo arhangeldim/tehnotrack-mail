@@ -1,11 +1,22 @@
 package ru.mail.track.message;
 
+import java.io.Serializable;
+
+
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import ru.mail.track.comands.CommandType;
 
 /**
  *
  */
-public abstract class Message {
+
+@JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include= JsonTypeInfo.As.PROPERTY, property="objectType")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value=LoginMessage.class),
+})
+public class Message implements Serializable {
 
     private Long id;
     private Long sender;

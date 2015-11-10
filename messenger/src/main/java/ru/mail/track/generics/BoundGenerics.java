@@ -52,6 +52,9 @@ public class BoundGenerics {
         List<Cat> cats = new ArrayList<>();
         cats.add(new Cat()); cats.add(new Cat());
 
+
+        List<? extends Pet> pets = cats;
+
         List<Dog> dogs = new ArrayList<>();
         dogs.add(new Dog()); dogs.add(new Dog());
 

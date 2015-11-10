@@ -43,4 +43,13 @@ public class Session {
     public void setSessionUser(User sessionUser) {
         this.sessionUser = sessionUser;
     }
+
+    @Override
+    public String toString() {
+        return "Session{" +
+                "id=" + id +
+                ", sessionUser=" + sessionUser +
+                ", connectionHandler=" + connectionHandler +
+                '}';
+    }
 }
