@@ -1,5 +1,10 @@
 package ru.mail.track.net;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.mail.track.message.Message;
+import ru.mail.track.session.Session;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -7,12 +12,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import ru.mail.track.message.Message;
-import ru.mail.track.session.Session;
 
 /**
  * Класс работающий с сокетом, умеет отправлять данные в сокет
@@ -54,7 +53,7 @@ public class SocketConnectionHandler implements ConnectionHandler {
     // Добавить еще подписчика
     @Override
     public void addListener(MessageListener listener) {
-        listeners.add(listener);
+        if (listener != null) listeners.add(listener);
     }
 
 

@@ -2,7 +2,6 @@ package ru.mail.track.message;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
 import ru.mail.track.comands.CommandType;
 
 /**
@@ -41,6 +40,14 @@ public class SendMessage extends Message {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    @Override
+    public String toString() {
+        return "SendMessage{" +
+                "chatId=" + chatId +
+                ", message='" + message + '\'' +
+                '}';
     }
 
 //    @Override

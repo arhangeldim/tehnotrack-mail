@@ -9,12 +9,11 @@ import ru.mail.track.message.SendMessage;
 import ru.mail.track.reflection.di.Auto;
 import ru.mail.track.session.Session;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.Scanner;
-
-import javax.annotation.PostConstruct;
 
 
 /**
@@ -26,11 +25,36 @@ public class ThreadedClient implements MessageListener {
     public static final String HOST = "localhost";
     static Logger log = LoggerFactory.getLogger(ThreadedClient.class);
     ConnectionHandler handler;
-
     @Auto(isRequired = true)
     private Protocol protocol = new StringProtocol();
 
     public ThreadedClient() {
+    }
+
+    public static void main(String[] args) throws Exception {
+        Protocol protocol = new StringProtocol();
+        ThreadedClient client = new ThreadedClient();
+        client.init();
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("$");
+        while (true) {
+            String input = scanner.nextLine();
+            if ("q".equals(input)) {
+                return;
+            }
+            client.processInput(input);
+        }
+    }
+
+    public static ThreadedClient start() throws Exception {
+        ThreadedClient client = new ThreadedClient();
+        client.init();
+        return client;
+    }
+
+    public ConnectionHandler getHandler() {
+        return handler;
     }
 
     @PostConstruct
@@ -49,21 +73,6 @@ public class ThreadedClient implements MessageListener {
             e.printStackTrace();
             System.exit(0);
             // exit, failed to open socket
-        }
-    }
-
-    public static void main(String[] args) throws Exception {
-        Protocol protocol = new StringProtocol();
-        ThreadedClient client = new ThreadedClient();
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("$");
-        while (true) {
-            String input = scanner.nextLine();
-            if ("q".equals(input)) {
-                return;
-            }
-            client.processInput(input);
         }
     }
 

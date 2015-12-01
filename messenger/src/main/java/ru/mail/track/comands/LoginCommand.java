@@ -2,13 +2,11 @@ package ru.mail.track.comands;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import ru.mail.track.message.LoginMessage;
-import ru.mail.track.message.Message;
-import ru.mail.track.message.User;
-import ru.mail.track.message.UserStore;
+import ru.mail.track.message.*;
 import ru.mail.track.net.SessionManager;
 import ru.mail.track.session.Session;
+
+import java.io.IOException;
 
 /**
  * Выполняем авторизацию по этой команде
@@ -25,6 +23,15 @@ public class LoginCommand implements Command {
         this.sessionManager = sessionManager;
     }
 
+    private void sendAcknowledge(Session session, String message) {
+        try {
+            SendMessage sendMessage = new SendMessage(-1L, message);
+            sendMessage.setType(CommandType.MSG_SEND);
+            session.getConnectionHandler().send(sendMessage);
+        } catch (IOException e) {
+            log.error("", e);
+        }
+    }
 
     @Override
     public void execute(Session session, Message msg) {
@@ -35,12 +42,14 @@ public class LoginCommand implements Command {
         } else {
             LoginMessage loginMsg = (LoginMessage) msg;
             User user = userStore.getUser(loginMsg.getLogin(), loginMsg.getPass());
-//            if (user == null) {
-//                return;
-//            }
+            if (user == null) {
+                sendAcknowledge(session, "Login Failed");
+                return;
+            }
             session.setSessionUser(user);
             sessionManager.registerUser(user.getId(), session.getId());
             log.info("Success login: {}", user);
+            sendAcknowledge(session, "Login Ok");
         }
         /*
         А эта часть у нас уже реализована
