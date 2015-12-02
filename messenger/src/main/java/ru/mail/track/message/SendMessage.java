@@ -5,7 +5,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
 import ru.mail.track.comands.CommandType;
 
 /**
@@ -66,5 +65,12 @@ public class SendMessage extends Message {
                 .append(chatId)
                 .append(message)
                 .toHashCode();
+    }
+    
+	public String toString() {
+        return "SendMessage{" +
+                "chatId=" + chatId +
+                ", message='" + message + '\'' +
+                '}';
     }
 }

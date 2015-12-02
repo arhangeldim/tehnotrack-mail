@@ -4,9 +4,7 @@ package ru.mail.track.message;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
 import ru.mail.track.comands.CommandType;
-import ru.mail.track.generics.Box;
 
 /**
  *
@@ -20,6 +18,11 @@ public class LoginMessage extends Message {
 
     @JsonProperty
     private String pass;
+
+    public LoginMessage(String login, String pass) {
+        this.login = login;
+        this.pass = pass;
+    }
 
     public LoginMessage() {
         setType(CommandType.USER_LOGIN);
