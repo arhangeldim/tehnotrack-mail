@@ -68,7 +68,7 @@ public class ThreadedServer {
     }
 
     private void startServer() throws Exception {
-        log.info("Started, waiting for connection");
+        log.warn("Started, waiting for connection");
 
         isRunning = true;
         while (isRunning) {

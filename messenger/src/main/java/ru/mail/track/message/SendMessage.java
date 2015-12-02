@@ -1,5 +1,8 @@
 package ru.mail.track.message;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
@@ -43,25 +46,25 @@ public class SendMessage extends Message {
         this.message = message;
     }
 
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//
-//        if (o == null || getClass() != o.getClass()) return false;
-//
-//        SendMessage that = (SendMessage) o;
-//
-//        return new org.apache.commons.lang3.builder.EqualsBuilder()
-//                .append(chatId, that.chatId)
-//                .append(message, that.message)
-//                .isEquals();
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return new org.apache.commons.lang3.builder.HashCodeBuilder(17, 37)
-//                .append(chatId)
-//                .append(message)
-//                .toHashCode();
-//    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SendMessage that = (SendMessage) o;
+
+        return new EqualsBuilder()
+                .append(chatId, that.chatId)
+                .append(message, that.message)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(chatId)
+                .append(message)
+                .toHashCode();
+    }
 }

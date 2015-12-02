@@ -25,9 +25,10 @@ public class LoginCommandTest {
     @Before
     public void setup() {
         sessionManager = new SessionManager();
-        userStore =  Mockito.mock(UserStore.class);
-        when(userStore.getUser("Jack", "qwerty")).thenReturn(defaultUser);
+        userStore = Mockito.mock(UserStore.class);
 
+        when(userStore.getUser("Jack", "qwerty")).thenReturn(defaultUser);
+        when(userStore.getUser("Jack", "*****")).thenReturn(defaultUser);
     }
 
     @Test
@@ -55,7 +56,8 @@ public class LoginCommandTest {
 
         Session session = new Session();
         loginCommand.execute(session, login);
-        assertNull(session.getSessionUser());
+        assertEquals(session.getSessionUser(), defaultUser);
+        //assertNull(session.getSessionUser());
     }
 
 

@@ -31,6 +31,7 @@ public class ThreadedClient implements MessageListener {
     private Protocol protocol = new StringProtocol();
 
     public ThreadedClient() {
+        init();
     }
 
     @PostConstruct

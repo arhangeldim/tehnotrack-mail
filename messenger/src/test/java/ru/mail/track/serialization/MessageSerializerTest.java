@@ -13,7 +13,6 @@ import ru.mail.track.message.LoginMessage;
 import ru.mail.track.message.Message;
 import ru.mail.track.message.Protocol;
 import ru.mail.track.message.SendMessage;
-import sun.rmi.runtime.Log;
 
 import static org.junit.Assert.*;
 

@@ -16,7 +16,7 @@ public class StopThread {
             while (!pleaseStop) {
                 try {
                     System.out.println("Thread::sleep()");
-                    TimeUnit.SECONDS.sleep(1);
+                    TimeUnit.SECONDS.sleep(100);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
@@ -48,11 +48,12 @@ public class StopThread {
         @Override
         public void run() {
             while (true) {
-                try {
-                    System.out.println("Thread::sleep()");
-                    TimeUnit.SECONDS.sleep(1);
-                } catch (InterruptedException e) {
-                }
+                System.out.println("q");
+//                try {
+//                    System.out.println("Thread::sleep()");
+//                    TimeUnit.SECONDS.sleep(1);
+//                } catch (InterruptedException e) {
+//                }
             }
         }
     }

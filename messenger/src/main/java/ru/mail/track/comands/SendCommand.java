@@ -28,6 +28,7 @@ public class SendCommand implements Command {
 
         SendMessage sendMessage = (SendMessage) message;
         Chat chat = messageStore.getChatById(sendMessage.getChatId());
+
         List<Long> parts = chat.getParticipantIds();
         try {
             for (Long userId : parts) {

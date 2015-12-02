@@ -10,6 +10,7 @@ import ru.mail.track.message.Message;
  *
  */
 public class JsonProtocol implements Protocol {
+
     @Override
     public byte[] encode(Message msg) throws ProtocolException {
         ObjectMapper jsonMapper = new ObjectMapper();
