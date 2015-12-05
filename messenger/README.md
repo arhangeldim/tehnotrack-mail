@@ -25,7 +25,7 @@ mvn exec:java -Dexec.mainClass="ru.mail.track.Main"
 mvn exec:exec -DClient
 ```
 
-Запуск сервера
+Запуск сервера 
 
 ```java
 mvn exec:exec -DServer
